@@ -1,18 +1,26 @@
 name: DevOps Proje Kontrolu
 
-# Kod her GitHub'a gonderildiginde (push) calis
 on: [push]
 
 jobs:
   build-islemi:
-    runs-on: ubuntu-latest # GitHub bizim icin bir Linux sunucu aciyor
+    runs-on: ubuntu-latest
 
     steps:
       - name: Kodlari GitHub'dan cek
         uses: actions/checkout@v3
 
-      - name: Docker Imajini Olustur (Build Testi)
-        run: docker build -t test-app .
+      - name: Python Kur
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
 
-      - name: Basari Durumu
-        run: echo "Kod saglam, Docker imaji basariyla olusturuldu!"
+      - name: Bagimliliklari Kur
+        run: pip install flask
+
+      - name: Testleri Calistir
+        run: python test_app.py
+
+      - name: Docker Imajini Olustur
+        if: success()
+        run: docker build -t test-app .
