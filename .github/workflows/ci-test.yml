@@ -1,0 +1,18 @@
+name: DevOps Proje Kontrolu
+
+# Kod her GitHub'a gonderildiginde (push) calis
+on: [push]
+
+jobs:
+  build-islemi:
+    runs-on: ubuntu-latest # GitHub bizim icin bir Linux sunucu aciyor
+
+    steps:
+      - name: Kodlari GitHub'dan cek
+        uses: actions/checkout@v3
+
+      - name: Docker Imajini Olustur (Build Testi)
+        run: docker build -t test-app .
+
+      - name: Basari Durumu
+        run: echo "Kod saglam, Docker imaji basariyla olusturuldu!"
