@@ -1,5 +1,5 @@
 import unittest
-from app.py import app # app.py dosyamızdaki uygulamayı çağırıyoruz
+from app import app # app.py dosyamızdaki uygulamayı çağırıyoruz
 
 class FlaskTest(unittest.TestCase):
 

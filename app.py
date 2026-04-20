@@ -8,7 +8,7 @@ def home():
 
 @app.route('/data')
 def get_data():
-    # Data Analyst gecmisine selam cakan mini bir veri cikisi
+    
     sample_data = {
         "status": "success",
         "message": "Veri basariyla cekildi",
