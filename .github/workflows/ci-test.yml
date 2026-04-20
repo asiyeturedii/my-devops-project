@@ -1,26 +1,40 @@
-name: DevOps Proje Kontrolu
+name: DevOps Proje Kontrolu ve Paketleme
 
 on: [push]
 
 jobs:
-  build-islemi:
+  build-ve-push:
     runs-on: ubuntu-latest
+    # Burası önemli: GitHub'ın paket yükleyebilmesi için izin veriyoruz
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - name: Kodlari GitHub'dan cek
         uses: actions/checkout@v3
 
-      - name: Python Kur
+      - name: Python Kur ve Test Et
         uses: actions/setup-python@v4
         with:
           python-version: "3.9"
 
-      - name: Bagimliliklari Kur
-        run: pip install flask
-
       - name: Testleri Calistir
-        run: python test_app.py
+        run: |
+          pip install flask
+          python test_app.py
 
-      - name: Docker Imajini Olustur
-        if: success()
-        run: docker build -t test-app .
+      - name: GitHub Container Registry'ye Giris Yap
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker Imajini Olustur ve Depoya Gonder
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          # İmajın adı senin kullanıcı adınla paketlenecek
+          tags: ghcr.io/${{ github.repository }}:latest
